@@ -1,14 +1,20 @@
 package mu.mcb.mobileacademytodo
 
+import android.content.Context
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,19 +32,17 @@ class MainActivity : AppCompatActivity() {
         linearLayoutManager = LinearLayoutManager(this)
         rv_todo.layoutManager = linearLayoutManager
 
-        todoList = ArrayList<Todo>()
-        todoList.add(Todo("Todo 1", "10 April 2020"))
-        todoList.add(Todo("Todo 2", "11 April 2020"))
-        todoList.add(Todo("Todo 3", "12 April 2020"))
-
-        adapter = TodoRecyclerAdapter(todoList)
+        adapter = TodoRecyclerAdapter(ServiceLocator.getTodoRepo().GetTodo())
         rv_todo.adapter = adapter
 
+        fab.setOnClickListener {
+            startActivityForResult(Intent(this, AddTodoActivity::class.java), 1)
+        };
+    }
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,4 +60,6 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
 }
