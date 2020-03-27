@@ -18,13 +18,11 @@ class AddTodoActivity : AppCompatActivity() {
         }
     }
 
-
     private fun validateAndSave(){
 
         var isValid = true;
 
-        progressBar.visibility = View.VISIBLE;
-        saveTodo.isEnabled = false;
+        setBusyState(true)
 
         var title = txtTitle.text.toString();
         var notes = txtNotes.text.toString();
@@ -36,23 +34,30 @@ class AddTodoActivity : AppCompatActivity() {
             isValid = false;
         }
 
-
         if(isValid){
-            var todo = Todo(title, date);
-            todo.notes = notes
-
-            ServiceLocator.getTodoRepo().Save(todo)
-            setResult(Activity.RESULT_OK)
-
-            //Simulate network call.
-            AsyncTask.execute {
-                Thread.sleep(2500)
-                finish()
-            }
+            saveTodo(title, date, notes)
         }
         else{
-            progressBar.visibility = View.INVISIBLE;
-            saveTodo.isEnabled = true;
+           setBusyState(false)
         }
+    }
+
+    private fun saveTodo(title: String, date: String, notes: String) {
+        var todo = Todo(title, date);
+        todo.notes = notes
+
+        ServiceLocator.getTodoRepo().Save(todo)
+        setResult(Activity.RESULT_OK)
+
+        //Simulate network call.
+        AsyncTask.execute {
+            Thread.sleep(2500)
+            finish()
+        }
+    }
+
+    private fun setBusyState(state:Boolean) {
+        progressBar.visibility = if(state) View.VISIBLE else View.INVISIBLE
+        saveTodo.isEnabled = !state;
     }
 }
