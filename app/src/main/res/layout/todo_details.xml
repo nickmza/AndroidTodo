@@ -48,14 +48,27 @@
         android:ems="10"
         android:inputType="date" />
 
-    <Button
-        android:id="@+id/saveTodo"
-        android:layout_width="145dp"
-        android:layout_height="63dp"
-        android:text="Save"
-        android:textSize="18px">
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    </Button>
+        <Button
+            android:id="@+id/saveTodo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textSize="18px">
+
+        </Button>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>
