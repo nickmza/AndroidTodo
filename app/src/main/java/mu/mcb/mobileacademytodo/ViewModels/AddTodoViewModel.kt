@@ -1,12 +1,11 @@
 package mu.mcb.mobileacademytodo.ViewModels
 
-import android.app.Activity
-import android.opengl.Visibility
-import android.os.AsyncTask
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import mu.mcb.mobileacademytodo.ServiceLocator
 import mu.mcb.mobileacademytodo.Todo
 
@@ -33,14 +32,24 @@ class AddTodoViewModel : ViewModel() {
             isBusy.value = false;
         }
         else{
-            saveTodo(title, notes, reminderDate)
+            GlobalScope.async(Dispatchers.Main) {
+                    saveTodo(
+                        title,
+                        notes,
+                        reminderDate
+                    )
+                    isBusy.value = false;
+                }
         }
     }
 
-    private fun saveTodo(title: String, date: String, notes: String) {
+    private suspend fun saveTodo(title: String, date: String, notes: String) {
         var todo = Todo(title, date);
         todo.notes = notes
         ServiceLocator.getTodoRepo().Save(todo)
+
+        //Simulate a slow network call.
+        Thread.sleep(2500)
     }
 
 }
