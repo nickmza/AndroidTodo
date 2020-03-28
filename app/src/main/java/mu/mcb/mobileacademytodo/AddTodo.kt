@@ -7,51 +7,39 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.todo_details.*
 import android.view.View
 import android.os.AsyncTask
+import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import mu.mcb.mobileacademytodo.ViewModels.AddTodoViewModel
 
 class AddTodoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_details)
+
+        val vm: AddTodoViewModel by lazy { ViewModelProviders.of(this).get(AddTodoViewModel::class.java) }
+
+        bindControls(vm)
+
         saveTodo.setOnClickListener {
-            validateAndSave()
+            validateAndSave(vm)
         }
     }
 
-    private fun validateAndSave(){
-
-        var isValid = true;
-
-        setBusyState(true)
-
-        var title = txtTitle.text.toString();
-        var notes = txtNotes.text.toString();
-        var date = txtDate.text.toString();
-
-        if(title.isEmpty())
-        {
-            txtTitle.error = "Required";
-            isValid = false;
-        }
-
-        if(isValid){
-            saveTodo(title, date, notes)
-        }
-        else{
-           setBusyState(false)
-        }
+    private fun bindControls(vm: AddTodoViewModel) {
+        vm.isBusy.observe(this, Observer<Boolean> { i -> setBusyState(i) });
+        vm.titleError.observe(this, Observer<String> { i -> txtTitle.error = i })
     }
 
-    private fun saveTodo(title: String, date: String, notes: String) {
-        var todo = Todo(title, date);
-        todo.notes = notes
-
-        ServiceLocator.getTodoRepo().Save(todo)
-        setResult(Activity.RESULT_OK)
-
-        //Simulate network call.
-        AsyncTask.execute {
-            Thread.sleep(2500)
+    private fun validateAndSave(vm:AddTodoViewModel){
+        vm.title = txtTitle.text.toString();
+        vm.notes = txtNotes.text.toString();
+        vm.reminderDate = txtDate.text.toString();
+        vm.createTodo()
+        if(vm.isValid){
+            setResult(Activity.RESULT_OK)
             finish()
         }
     }
