@@ -17,9 +17,7 @@ class AddTodoViewModel : ViewModel() {
     var notes:String = ""
     var reminderDate:String = ""
     var isValid:Boolean = true
-
     var titleError:MutableLiveData<String> = MutableLiveData<String>().default("")
-
     var isBusy : MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(false)
 
     fun createTodo(){
@@ -33,11 +31,7 @@ class AddTodoViewModel : ViewModel() {
         }
         else{
             GlobalScope.async(Dispatchers.Main) {
-                    saveTodo(
-                        title,
-                        notes,
-                        reminderDate
-                    )
+                    saveTodo(title, notes, reminderDate)
                     isBusy.value = false;
                 }
         }
@@ -51,5 +45,4 @@ class AddTodoViewModel : ViewModel() {
         //Simulate a slow network call.
         Thread.sleep(2500)
     }
-
 }

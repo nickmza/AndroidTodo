@@ -1,74 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="Title" />
-
-
-    <EditText
-        android:id="@+id/txtTitle"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="Notes" />
-
-    <EditText
-        android:id="@+id/txtNotes"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:ems="10"
-        android:lines="8"
-        android:maxLines="8"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        android:gravity="top|left"
-        android:singleLine="false" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="Reminder Date" />
-
-    <EditText
-        android:id="@+id/txtDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
-
-    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/saveTodo"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:textSize="18px">
+            android:text="Title"
+            android:textColor="#000000" />
 
-        </Button>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:visibility="gone" />
+        <EditText
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Notes"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/txtNotes"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:ems="10"
+            android:gravity="top|left"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLines="8"
+            android:scrollbars="vertical"
+            android:singleLine="false" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Reminder Date"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/txtDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/saveTodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textSize="18px">
+
+            </Button>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
-
-</LinearLayout>
+</layout>
