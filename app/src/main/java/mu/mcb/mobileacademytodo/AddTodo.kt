@@ -24,6 +24,8 @@ class AddTodoActivity : AppCompatActivity() {
         val vm: AddTodoViewModel by lazy { ViewModelProviders.of(this).get(AddTodoViewModel::class.java) }
         binding.vm = vm;
 
+        binding.lifecycleOwner = this;
+
         bindControls(vm)
 
         saveTodo.setOnClickListener {
@@ -32,7 +34,6 @@ class AddTodoActivity : AppCompatActivity() {
     }
 
     private fun bindControls(vm: AddTodoViewModel) {
-        vm.isBusy.observe(this, Observer<Boolean> { i -> setBusyState(i) });
         vm.titleError.observe(this, Observer<String> { i -> txtTitle.error = i })
     }
 
@@ -45,8 +46,4 @@ class AddTodoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBusyState(state:Boolean) {
-        progressBar.visibility = if(state) View.VISIBLE else View.INVISIBLE
-        saveTodo.isEnabled = !state;
-    }
 }

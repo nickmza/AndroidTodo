@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="mu.mcb.mobileacademytodo.viewmodels.AddTodoViewModel" />
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="@={vm.title}"/>
+            android:text="@={vm.title}" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -68,16 +69,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:textSize="18px">
-
-            </Button>
+                android:textSize="18px"
+                android:enabled="@{vm.isSaveEnabled()}"
+                />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:visibility="gone" />
+                android:visibility="@{vm.isProgressVisible()}"/>
 
 
         </LinearLayout>

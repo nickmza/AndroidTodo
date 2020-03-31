@@ -1,5 +1,7 @@
 package mu.mcb.mobileacademytodo.viewmodels
 
+import android.view.View
+import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,25 +17,33 @@ class AddTodoViewModel : ViewModel() {
     var reminderDate:String = ""
     var isValid:Boolean = true
     var titleError:MutableLiveData<String> = MutableLiveData<String>().default("")
-    var isBusy : MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(false)
+    var isProgressVisible : MutableLiveData<Int> = MutableLiveData<Int>().default(View.INVISIBLE)
+    var isSaveEnabled :  MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(true)
 
 
     fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
+    fun isBusy(busy:Boolean){
+        isProgressVisible.value = if(busy) View.VISIBLE else View.INVISIBLE;
+        isSaveEnabled.value = !busy;
+    }
+
     fun createTodo(){
-        isBusy.value = true
+        isBusy(true)
+
+        isValid = true;
 
         if(title.isEmpty())
         {
             titleError.value = "Required";
             isValid = false;
-            isBusy.value = false;
+            isBusy(false)
         }
         else{
             GlobalScope.async(Dispatchers.Main) {
-                    saveTodo(title, notes, reminderDate)
-                    isBusy.value = false;
-                }
+                saveTodo(title, notes, reminderDate)
+                isBusy(false);
+            }
         }
     }
 
