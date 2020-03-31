@@ -1,16 +1,13 @@
-package mu.mcb.mobileacademytodo.ViewModels
+package mu.mcb.mobileacademytodo.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import mu.mcb.mobileacademytodo.ServiceLocator
 import mu.mcb.mobileacademytodo.Todo
 
-
-fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
 class AddTodoViewModel : ViewModel() {
     var title:String = "New Todo"
@@ -19,6 +16,9 @@ class AddTodoViewModel : ViewModel() {
     var isValid:Boolean = true
     var titleError:MutableLiveData<String> = MutableLiveData<String>().default("")
     var isBusy : MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(false)
+
+
+    fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
     fun createTodo(){
         isBusy.value = true

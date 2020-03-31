@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="mu.mcb.mobileacademytodo.Todo" />
+            type="mu.mcb.mobileacademytodo.viewmodels.AddTodoViewModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

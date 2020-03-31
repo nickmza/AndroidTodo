@@ -6,28 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.todo_details.*
 import android.view.View
-import android.os.AsyncTask
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import mu.mcb.mobileacademytodo.ViewModels.AddTodoViewModel
+import mu.mcb.mobileacademytodo.viewmodels.AddTodoViewModel
 import mu.mcb.mobileacademytodo.databinding.TodoDetailsBinding
 
 class AddTodoActivity : AppCompatActivity() {
 
     private lateinit var binding: TodoDetailsBinding
-    private val vm: Todo = Todo("New Todo","")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.todo_details)
 
         binding = DataBindingUtil.setContentView(this, R.layout.todo_details)
-        binding.vm = vm;
 
         val vm: AddTodoViewModel by lazy { ViewModelProviders.of(this).get(AddTodoViewModel::class.java) }
+        binding.vm = vm;
 
         bindControls(vm)
 
@@ -42,10 +37,6 @@ class AddTodoActivity : AppCompatActivity() {
     }
 
     private fun validateAndSave(vm:AddTodoViewModel){
-
-        vm.title = vm.title
-        vm.notes = vm.notes
-        vm.reminderDate = vm.reminderDate
 
         vm.createTodo()
         if(vm.isValid){
