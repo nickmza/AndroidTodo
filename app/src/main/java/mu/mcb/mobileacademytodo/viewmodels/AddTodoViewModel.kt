@@ -20,12 +20,17 @@ class AddTodoViewModel : ViewModel() {
     var isProgressVisible : MutableLiveData<Int> = MutableLiveData<Int>().default(View.INVISIBLE)
     var isSaveEnabled :  MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(true)
 
+    var onComplete : ()->Unit = {}
 
     fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
     fun isBusy(busy:Boolean){
         isProgressVisible.value = if(busy) View.VISIBLE else View.INVISIBLE;
         isSaveEnabled.value = !busy;
+    }
+
+    fun onCreateTodo(view: View){
+        createTodo()
     }
 
     fun createTodo(){
@@ -43,6 +48,7 @@ class AddTodoViewModel : ViewModel() {
             GlobalScope.async(Dispatchers.Main) {
                 saveTodo(title, notes, reminderDate)
                 isBusy(false);
+                onComplete();
             }
         }
     }

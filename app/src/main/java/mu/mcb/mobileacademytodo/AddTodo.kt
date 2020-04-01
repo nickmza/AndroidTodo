@@ -2,6 +2,7 @@ package mu.mcb.mobileacademytodo
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.todo_details.*
@@ -28,22 +29,15 @@ class AddTodoActivity : AppCompatActivity() {
 
         bindControls(vm)
 
-        saveTodo.setOnClickListener {
-            validateAndSave(vm)
-        }
+        vm.onComplete =
+            {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
     }
 
     private fun bindControls(vm: AddTodoViewModel) {
         vm.titleError.observe(this, Observer<String> { i -> txtTitle.error = i })
-    }
-
-    private fun validateAndSave(vm:AddTodoViewModel){
-
-        vm.createTodo()
-        if(vm.isValid){
-            setResult(Activity.RESULT_OK)
-            finish()
-        }
     }
 
 }
