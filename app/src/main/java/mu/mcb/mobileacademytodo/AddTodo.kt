@@ -39,5 +39,4 @@ class AddTodoActivity : AppCompatActivity() {
     private fun bindControls(vm: AddTodoViewModel) {
         vm.titleError.observe(this, Observer<String> { i -> txtTitle.error = i })
     }
-
 }

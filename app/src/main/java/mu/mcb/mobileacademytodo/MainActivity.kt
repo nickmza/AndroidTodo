@@ -1,49 +1,23 @@
 package mu.mcb.mobileacademytodo
 
-import android.content.Context
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 
-import kotlinx.android.synthetic.main.todo_list.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
-
-
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var linearLayoutManager: LinearLayoutManager
-
-    private lateinit var adapter: TodoRecyclerAdapter
-
-    private lateinit var todoList: ArrayList<Todo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        linearLayoutManager = LinearLayoutManager(this)
-        rv_todo.layoutManager = linearLayoutManager
-
-        adapter = TodoRecyclerAdapter(ServiceLocator.getTodoRepo().GetTodo())
-        rv_todo.adapter = adapter
-
         fab.setOnClickListener {
             startActivityForResult(Intent(this, AddTodoActivity::class.java), 1)
-        };
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -61,6 +35,4 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
 }
