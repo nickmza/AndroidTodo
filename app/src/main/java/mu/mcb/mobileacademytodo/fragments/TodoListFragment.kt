@@ -42,4 +42,8 @@ class TodoListFragment : Fragment() {
         super.onResume()
         adapter.notifyDataSetChanged()
     }
+
+    fun update(){
+        adapter.notifyDataSetChanged()
+    }
 }

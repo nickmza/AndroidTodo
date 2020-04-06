@@ -1,14 +1,18 @@
 package mu.mcb.mobileacademytodo
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import kotlinx.android.synthetic.main.activity_main.*
-import android.content.Intent
+import mu.mcb.mobileacademytodo.Interfaces.IModalDialog
+import mu.mcb.mobileacademytodo.fragments.TodoDetailsFragment
+import mu.mcb.mobileacademytodo.fragments.TodoListFragment
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), IModalDialog {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +20,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            startActivityForResult(Intent(this, AddTodoActivity::class.java), 1)
+            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.frg, TodoDetailsFragment())
+            ft.addToBackStack("")
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit()
         }
     }
 
@@ -34,5 +42,16 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun close() {
+
+        getSupportFragmentManager().popBackStack()
+
+        val f = getSupportFragmentManager().findFragmentById(R.id.fragTodo)
+        if(f is TodoListFragment){
+            f.update()
+        }
+
     }
 }
