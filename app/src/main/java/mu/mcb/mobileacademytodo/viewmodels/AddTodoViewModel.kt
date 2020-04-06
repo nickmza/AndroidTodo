@@ -15,7 +15,6 @@ class AddTodoViewModel : ViewModel() {
     var title:String = "New Todo"
     var notes:String = ""
     var reminderDate:String = ""
-    var isValid:Boolean = true
     var titleError:MutableLiveData<String> = MutableLiveData<String>().default("")
     var isProgressVisible : MutableLiveData<Int> = MutableLiveData<Int>().default(View.INVISIBLE)
     var isSaveEnabled :  MutableLiveData<Boolean> = MutableLiveData<Boolean>().default(true)
@@ -36,12 +35,9 @@ class AddTodoViewModel : ViewModel() {
     fun createTodo(){
         isBusy(true)
 
-        isValid = true;
-
         if(title.isEmpty())
         {
             titleError.value = "Required";
-            isValid = false;
             isBusy(false)
         }
         else{
