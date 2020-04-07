@@ -44,7 +44,11 @@ class AddTodoViewModel : ViewModel() {
         }
         else{
             GlobalScope.async(Dispatchers.Main) {
-                saveTodo(title, notes, reminderDate)
+                var saveTask = GlobalScope.async(Dispatchers.IO)
+                {
+                    saveTodo(title, notes, reminderDate)
+                }
+                saveTask.await()
                 isBusy(false);
                 onComplete();
             }
