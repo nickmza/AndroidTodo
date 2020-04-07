@@ -25,24 +25,24 @@ class TodoDetailsFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.todo_details, container, false)
-
-        val vm: AddTodoViewModel by lazy { ViewModelProviders.of(this).get(AddTodoViewModel::class.java) }
-        binding.vm = vm;
-
-        binding.lifecycleOwner = this;
-
+        var vm = createViewModel(inflater, container)
         vm.titleError.observe(this, Observer<String> { i -> txtTitle.error = i })
-
         vm.onComplete =
-            {
-                if(activity is IModalDialog){
-                   var dialog = activity as IModalDialog
-                    dialog.close()
-                }
+        {
+            if(activity is IModalDialog){
+               var dialog = activity as IModalDialog
+                dialog.close()
             }
+        }
 
         return binding.root
     }
 
+    private fun createViewModel(inflater: LayoutInflater, container: ViewGroup?):AddTodoViewModel{
+        binding = DataBindingUtil.inflate(inflater, R.layout.todo_details, container, false)
+        val vm: AddTodoViewModel by lazy { ViewModelProviders.of(this).get(AddTodoViewModel::class.java) }
+        binding.vm = vm;
+        binding.lifecycleOwner = this;
+        return vm
+    }
 }

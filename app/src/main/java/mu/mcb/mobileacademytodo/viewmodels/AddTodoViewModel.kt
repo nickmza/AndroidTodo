@@ -1,5 +1,6 @@
 package mu.mcb.mobileacademytodo.viewmodels
 
+import android.util.Log
 import android.view.View
 import androidx.databinding.Bindable
 import androidx.lifecycle.MutableLiveData
@@ -33,6 +34,7 @@ class AddTodoViewModel : ViewModel() {
     }
 
     fun createTodo(){
+
         isBusy(true)
 
         if(title.isEmpty())
