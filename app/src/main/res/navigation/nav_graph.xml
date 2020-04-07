@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/todoListFragment">
+
+    <fragment
+        android:id="@+id/todoListFragment"
+        android:name="mu.mcb.mobileacademytodo.fragments.TodoListFragment"
+        android:label="TodoListFragment" >
+        <action
+            android:id="@+id/action_todoListFragment_to_todoDetailsFragment"
+            app:destination="@id/todoDetailsFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/todoDetailsFragment"
+        android:name="mu.mcb.mobileacademytodo.fragments.TodoDetailsFragment"
+        android:label="TodoDetailsFragment" />
+</navigation>

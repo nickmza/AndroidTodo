@@ -7,10 +7,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import mu.mcb.mobileacademytodo.Interfaces.IModalDialog
 import mu.mcb.mobileacademytodo.fragments.TodoDetailsFragment
 import mu.mcb.mobileacademytodo.fragments.TodoListFragment
+import mu.mcb.mobileacademytodo.fragments.TodoListFragmentDirections
 
 
 class MainActivity : AppCompatActivity(), IModalDialog {
@@ -23,12 +25,9 @@ class MainActivity : AppCompatActivity(), IModalDialog {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            current = TodoDetailsFragment()
-            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.add(R.id.frg, current)
-            ft.addToBackStack("")
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit()
+            val action =
+                TodoListFragmentDirections.actionTodoListFragmentToTodoDetailsFragment()
+            findNavController(R.id.nav_host_fragment).navigate(action)
         }
     }
 
@@ -49,14 +48,6 @@ class MainActivity : AppCompatActivity(), IModalDialog {
     }
 
     override fun close() {
-
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        ft.detach(current)
-        ft.commit()
-
-        val f = supportFragmentManager.findFragmentById(R.id.fragTodo)
-        if(f is TodoListFragment){
-            f.update()
-        }
+        findNavController(R.id.nav_host_fragment).popBackStack();
     }
 }
