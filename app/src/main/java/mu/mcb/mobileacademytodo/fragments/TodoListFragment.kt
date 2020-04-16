@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.todo_list.*
 import mu.mcb.mobileacademytodo.R
 import mu.mcb.mobileacademytodo.ServiceLocator
 import mu.mcb.mobileacademytodo.TodoRecyclerAdapter
+import mu.mcb.mobileacademytodo.helpers.SwipeToDeleteCallback
 
 
 class TodoListFragment : Fragment() {
@@ -37,8 +39,11 @@ class TodoListFragment : Fragment() {
         repo.onRefresh = {
             adapter.notifyDataSetChanged()
         }
-        adapter = TodoRecyclerAdapter(repo.GetTodo())
+        adapter = TodoRecyclerAdapter(repo.GetTodo(), this)
         rv_todo.adapter = adapter
+
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(rv_todo)
 
     }
 
