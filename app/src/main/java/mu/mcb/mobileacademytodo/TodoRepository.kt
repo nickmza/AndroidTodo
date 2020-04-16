@@ -3,8 +3,9 @@ package mu.mcb.mobileacademytodo
 import android.util.Log
 import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import mu.mcb.mobileacademytodo.Interfaces.INotificationService
 
-class TodoRepository : ITodoRepository{
+class TodoRepository(var notificationService: INotificationService) : ITodoRepository{
 
     private val collectionName = "todo"
 
@@ -20,10 +21,13 @@ class TodoRepository : ITodoRepository{
             .add(data)
             .addOnSuccessListener { documentReference ->
                 Log.d("ToDo", "DocumentSnapshot added with ID: ${documentReference.id}")
+                notificationService.notify("Todo Saved.")
             }
             .addOnFailureListener { e ->
                 Log.w("ToDo", "Error adding document", e)
+                notificationService.notify("Error: $e")
             }
+        notificationService.notify("Todo Saved.")
     }
 
     override fun GetTodo(): ArrayList<Todo> {
@@ -42,6 +46,7 @@ class TodoRepository : ITodoRepository{
             }
             .addOnFailureListener { exception ->
                 Log.w("ToDo", "Error getting documents.", exception)
+                notificationService.notify("Error: $exception")
             }
         return todoItems
     }

@@ -58,9 +58,9 @@ class AddTodoViewModel : ViewModel() {
     private suspend fun saveTodo(title: String, date: String, notes: String) {
         var todo = Todo(title, date);
         todo.notes = notes
-        ServiceLocator.getTodoRepo().Save(todo)
+        ServiceLocator.todoRepository.Save(todo)
 
         //Simulate a slow network call.
-        Thread.sleep(2500)
+        Thread.sleep(500)
     }
 }

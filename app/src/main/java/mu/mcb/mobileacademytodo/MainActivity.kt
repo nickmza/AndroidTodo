@@ -1,17 +1,13 @@
 package mu.mcb.mobileacademytodo
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import mu.mcb.mobileacademytodo.Interfaces.IModalDialog
-import mu.mcb.mobileacademytodo.fragments.TodoDetailsFragment
-import mu.mcb.mobileacademytodo.fragments.TodoListFragment
 import mu.mcb.mobileacademytodo.fragments.TodoListFragmentDirections
 
 
@@ -24,10 +20,20 @@ class MainActivity : AppCompatActivity(), IModalDialog {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        configureServiceLocator()
+
         fab.setOnClickListener {
             val action =
                 TodoListFragmentDirections.actionTodoListFragmentToTodoDetailsFragment()
             findNavController(R.id.nav_host_fragment).navigate(action)
+        }
+    }
+
+    private fun configureServiceLocator() {
+        if(!ServiceLocator.initilised){
+            ServiceLocator.notificationService = NotificationService(applicationContext);
+            ServiceLocator.todoRepository = TodoRepository(ServiceLocator.notificationService);
+            ServiceLocator.initilised = true;
         }
     }
 

@@ -1,13 +1,11 @@
 package mu.mcb.mobileacademytodo
 
+import mu.mcb.mobileacademytodo.Interfaces.INotificationService
 import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
+import javax.xml.transform.SourceLocator
 
 object ServiceLocator{
-
-    private var todoRepo = TodoRepository()
-
-    fun getTodoRepo() : ITodoRepository{
-        return todoRepo;
-    }
-
+    lateinit var notificationService: INotificationService
+    lateinit var todoRepository: TodoRepository
+    var initilised: Boolean = false
 }

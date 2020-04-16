@@ -33,7 +33,7 @@ class TodoListFragment : Fragment() {
         linearLayoutManager = LinearLayoutManager(this.activity)
         rv_todo.layoutManager = linearLayoutManager
 
-        var repo = ServiceLocator.getTodoRepo()
+        var repo = ServiceLocator.todoRepository
         repo.onRefresh = {
             adapter.notifyDataSetChanged()
         }
