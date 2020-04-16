@@ -40,6 +40,7 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
                     Log.d("ToDo", "${document.id} => ${document.data}")
                     var todo = Todo(document.data["title"].toString(), document.data["reminderDate"].toString())
                     todo.notes = document.data["notes"].toString()
+                    todo.id = document.id
                     todoItems.add(todo)
                 }
                 onRefresh();
@@ -49,6 +50,13 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
                 notificationService.notify("Error: $exception")
             }
         return todoItems
+    }
+
+    override fun delete(item: Todo) {
+        val db = FirebaseFirestore.getInstance()
+        var document = db.collection(collectionName).document(item.id)
+        document.delete()
+        notificationService.notify("Todo Deleted...")
     }
 
     override var onRefresh: () -> Unit = {}

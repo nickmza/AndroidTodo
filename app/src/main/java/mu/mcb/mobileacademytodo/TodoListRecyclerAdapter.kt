@@ -1,19 +1,20 @@
 package mu.mcb.mobileacademytodo
 
-import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.rv_todo_row.view.*
+import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
 import mu.mcb.mobileacademytodo.fragments.TodoListFragment
 
 
-class TodoRecyclerAdapter(private val todos: ArrayList<Todo>, var context: TodoListFragment) : RecyclerView.Adapter<TodoRecyclerAdapter.TodoHolder>()  {
+class TodoRecyclerAdapter(private val todos: ArrayList<Todo>, var context: TodoListFragment, var repo: ITodoRepository) : RecyclerView.Adapter<TodoRecyclerAdapter.TodoHolder>()  {
 
     lateinit var itemToDelete: Todo
     var itemToDeletePosition = 0
+    var deleteItem: Boolean = false;
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoRecyclerAdapter.TodoHolder {
@@ -32,6 +33,7 @@ class TodoRecyclerAdapter(private val todos: ArrayList<Todo>, var context: TodoL
         itemToDeletePosition = position
         todos.removeAt(position)
         notifyItemRemoved(position)
+        deleteItem = true
         showUndoSnackbar()
     }
 
@@ -43,10 +45,25 @@ class TodoRecyclerAdapter(private val todos: ArrayList<Todo>, var context: TodoL
             Snackbar.LENGTH_LONG
         )
         snackbar.setAction("Undo") { v -> undoDelete() }
+
+
+        var callback = object : Snackbar.Callback(){
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+
+                if(deleteItem){
+                    repo.delete(itemToDelete)
+                }
+            }
+        }
+
+        snackbar.addCallback(callback)
+
         snackbar.show()
     }
 
     private fun undoDelete() {
+        deleteItem = false
         todos.add(
             itemToDeletePosition,
             itemToDelete

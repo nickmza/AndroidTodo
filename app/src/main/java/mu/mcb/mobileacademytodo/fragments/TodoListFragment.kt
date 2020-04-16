@@ -39,7 +39,7 @@ class TodoListFragment : Fragment() {
         repo.onRefresh = {
             adapter.notifyDataSetChanged()
         }
-        adapter = TodoRecyclerAdapter(repo.GetTodo(), this)
+        adapter = TodoRecyclerAdapter(repo.GetTodo(), this, repo)
         rv_todo.adapter = adapter
 
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter))

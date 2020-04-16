@@ -1,6 +1,7 @@
 package mu.mcb.mobileacademytodo
 
 class Todo(var title:String, var reminderDate:String) {
+    lateinit var id: String
     var notes:String = ""
 
     fun toHashMap(): HashMap<String, Any> {
