@@ -42,7 +42,7 @@ class TodoListFragment : Fragment() {
         adapter = TodoRecyclerAdapter(repo.GetTodo(), this, repo)
         rv_todo.adapter = adapter
 
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter, context!!))
         itemTouchHelper.attachToRecyclerView(rv_todo)
 
     }

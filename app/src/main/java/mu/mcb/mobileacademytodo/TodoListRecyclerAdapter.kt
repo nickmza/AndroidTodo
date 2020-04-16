@@ -45,21 +45,19 @@ class TodoRecyclerAdapter(private val todos: ArrayList<Todo>, var context: TodoL
             Snackbar.LENGTH_LONG
         )
         snackbar.setAction("Undo") { v -> undoDelete() }
+        snackbar.addCallback(OnDismissSnackbar())
+        snackbar.show()
+    }
 
-
-        var callback = object : Snackbar.Callback(){
+    private fun OnDismissSnackbar(): Snackbar.Callback {
+        return object : Snackbar.Callback() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 super.onDismissed(transientBottomBar, event)
-
-                if(deleteItem){
+                if (deleteItem) {
                     repo.delete(itemToDelete)
                 }
             }
         }
-
-        snackbar.addCallback(callback)
-
-        snackbar.show()
     }
 
     private fun undoDelete() {
