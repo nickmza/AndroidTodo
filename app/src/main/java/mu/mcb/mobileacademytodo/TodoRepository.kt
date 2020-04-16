@@ -1,23 +1,51 @@
 package mu.mcb.mobileacademytodo
 
+import android.util.Log
 import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
+import com.google.firebase.firestore.FirebaseFirestore
 
 class TodoRepository : ITodoRepository{
 
-    var todoList = ArrayList<Todo>()
+    private val collectionName = "todo"
 
-    init {
-        todoList.add(Todo("Todo 1", "10 April 2020"))
-        todoList.add(Todo("Todo 2", "11 April 2020"))
-        todoList.add(Todo("Todo 3", "12 April 2020"))
-    }
+    private var todoItems = ArrayList<Todo>()
 
     override fun Save(todo: Todo) {
-        todoList.add(todo)
+
+        val db = FirebaseFirestore.getInstance()
+
+        var data = todo.toHashMap()
+
+        db.collection(collectionName)
+            .add(data)
+            .addOnSuccessListener { documentReference ->
+                Log.d("ToDo", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("ToDo", "Error adding document", e)
+            }
     }
 
     override fun GetTodo(): ArrayList<Todo> {
-        return  todoList
+        val db = FirebaseFirestore.getInstance()
+        db.collection(collectionName)
+            .get()
+            .addOnSuccessListener { result ->
+                todoItems.clear()
+                for (document in result) {
+                    Log.d("ToDo", "${document.id} => ${document.data}")
+                    var todo = Todo(document.data["title"].toString(), document.data["reminderDate"].toString())
+                    todo.notes = document.data["notes"].toString()
+                    todoItems.add(todo)
+                }
+                onRefresh();
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ToDo", "Error getting documents.", exception)
+            }
+        return todoItems
     }
+
+    override var onRefresh: () -> Unit = {}
 
 }

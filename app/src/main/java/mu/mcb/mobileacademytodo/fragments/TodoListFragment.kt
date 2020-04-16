@@ -1,16 +1,16 @@
 package mu.mcb.mobileacademytodo.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.todo_list.*
 import mu.mcb.mobileacademytodo.R
-
-import kotlinx.android.synthetic.main.todo_list.*;
 import mu.mcb.mobileacademytodo.ServiceLocator
-import mu.mcb.mobileacademytodo.Todo
 import mu.mcb.mobileacademytodo.TodoRecyclerAdapter
 
 
@@ -33,13 +33,25 @@ class TodoListFragment : Fragment() {
         linearLayoutManager = LinearLayoutManager(this.activity)
         rv_todo.layoutManager = linearLayoutManager
 
-        adapter = TodoRecyclerAdapter(ServiceLocator.getTodoRepo().GetTodo())
+        var repo = ServiceLocator.getTodoRepo()
+        repo.onRefresh = {
+            adapter.notifyDataSetChanged()
+        }
+        adapter = TodoRecyclerAdapter(repo.GetTodo())
         rv_todo.adapter = adapter
 
     }
 
+
     override fun onResume() {
         super.onResume()
         adapter.notifyDataSetChanged()
+        hideKeyboard()
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager =
+            activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 }
