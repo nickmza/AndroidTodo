@@ -5,6 +5,7 @@ import com.google.firebase.firestore.CollectionReference
 import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import mu.mcb.mobileacademytodo.Interfaces.INotificationService
+import java.lang.Exception
 
 class TodoRepository(var notificationService: INotificationService) : ITodoRepository{
 
@@ -13,15 +14,17 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
     private var todoItems = ArrayList<Todo>()
 
     override fun Save(todo: Todo) {
-        getCollection()
-            .add(todo.toHashMap())
-            .addOnSuccessListener {
-                notificationService.notify("Todo Saved.")
-            }
-            .addOnFailureListener { e ->
-                Log.w("ToDo", "Error adding document", e)
-                notificationService.notify("Error: $e")
-            }
+        val collection = getCollection()
+        var ref = collection.document()
+        todo.id = ref.id
+        ref.set(todo)
+        .addOnSuccessListener {
+            notificationService.notify("Todo Saved.")
+        }
+        .addOnFailureListener { e ->
+            Log.w("ToDo", "Error adding document", e)
+            notificationService.notify("Error: $e")
+        }
     }
 
     override fun GetTodo(): ArrayList<Todo> {
@@ -29,11 +32,12 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
             .get()
             .addOnSuccessListener { result ->
                 todoItems.clear()
-                for (document in result) {
-                    var todo = Todo(document.data["title"].toString(), document.data["reminderDate"].toString())
-                    todo.notes = document.data["notes"].toString()
-                    todo.id = document.id
+                for (document in result) try{
+                    var todo = document.toObject(Todo::class.java)
                     todoItems.add(todo)
+                }
+                catch(e: Exception){
+                    Log.d("TODO", e.toString())
                 }
                 onRefresh();
             }
