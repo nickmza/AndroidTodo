@@ -13,16 +13,12 @@ import mu.mcb.mobileacademytodo.TodoRecyclerAdapter
 
 public class SwipeToDeleteCallback(var adapter: TodoRecyclerAdapter, context : Context) : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
 
-
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.baseline_delete_24)
     private val intrinsicWidth = deleteIcon?.intrinsicWidth
     private val intrinsicHeight = deleteIcon?.intrinsicHeight
     private val background = ColorDrawable()
     private val backgroundColor = Color.parseColor("#f44336")
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
-
-    init {
-    }
 
     override fun onMove(
         recyclerView: RecyclerView,
@@ -72,14 +68,10 @@ public class SwipeToDeleteCallback(var adapter: TodoRecyclerAdapter, context : C
         deleteIcon?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteIcon?.draw(c)
 
-
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
-
 
     private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
         c?.drawRect(left, top, right, bottom, clearPaint)
     }
-
-
 }

@@ -1,6 +1,7 @@
 package mu.mcb.mobileacademytodo
 
 import android.util.Log
+import com.google.firebase.firestore.CollectionReference
 import mu.mcb.mobileacademytodo.Interfaces.ITodoRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import mu.mcb.mobileacademytodo.Interfaces.INotificationService
@@ -12,32 +13,23 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
     private var todoItems = ArrayList<Todo>()
 
     override fun Save(todo: Todo) {
-
-        val db = FirebaseFirestore.getInstance()
-
-        var data = todo.toHashMap()
-
-        db.collection(collectionName)
-            .add(data)
-            .addOnSuccessListener { documentReference ->
-                Log.d("ToDo", "DocumentSnapshot added with ID: ${documentReference.id}")
+        getCollection()
+            .add(todo.toHashMap())
+            .addOnSuccessListener {
                 notificationService.notify("Todo Saved.")
             }
             .addOnFailureListener { e ->
                 Log.w("ToDo", "Error adding document", e)
                 notificationService.notify("Error: $e")
             }
-        notificationService.notify("Todo Saved.")
     }
 
     override fun GetTodo(): ArrayList<Todo> {
-        val db = FirebaseFirestore.getInstance()
-        db.collection(collectionName)
+        getCollection()
             .get()
             .addOnSuccessListener { result ->
                 todoItems.clear()
                 for (document in result) {
-                    Log.d("ToDo", "${document.id} => ${document.data}")
                     var todo = Todo(document.data["title"].toString(), document.data["reminderDate"].toString())
                     todo.notes = document.data["notes"].toString()
                     todo.id = document.id
@@ -53,10 +45,15 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
     }
 
     override fun delete(item: Todo) {
+        getCollection().document(item.id).delete()
+            .addOnSuccessListener() {
+            notificationService.notify("Todo Deleted...")
+        }
+    }
+
+    private fun getCollection() : CollectionReference {
         val db = FirebaseFirestore.getInstance()
-        var document = db.collection(collectionName).document(item.id)
-        document.delete()
-        notificationService.notify("Todo Deleted...")
+        return db.collection(collectionName)
     }
 
     override var onRefresh: () -> Unit = {}

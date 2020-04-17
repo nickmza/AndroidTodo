@@ -3,6 +3,7 @@ package mu.mcb.mobileacademytodo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity(), IModalDialog {
             val action =
                 TodoListFragmentDirections.actionTodoListFragmentToTodoDetailsFragment()
             findNavController(R.id.nav_host_fragment).navigate(action)
+            fab.hide()
         }
     }
 
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity(), IModalDialog {
     }
 
     override fun close() {
+        fab.show()
         findNavController(R.id.nav_host_fragment).popBackStack();
     }
 }
