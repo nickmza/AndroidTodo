@@ -1,8 +1,7 @@
 package mu.mcb.mobileacademytodo
 
 
-class Todo  {
-    constructor(title: String, date: String)
+class Todo{
 
     lateinit var id: String
     var notes:String = ""

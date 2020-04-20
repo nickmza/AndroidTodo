@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.todo_list.*
 import mu.mcb.mobileacademytodo.R
 import mu.mcb.mobileacademytodo.ServiceLocator
@@ -45,6 +47,8 @@ class TodoListFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter, context!!))
         itemTouchHelper.attachToRecyclerView(rv_todo)
 
+        var fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.show()
     }
 
 

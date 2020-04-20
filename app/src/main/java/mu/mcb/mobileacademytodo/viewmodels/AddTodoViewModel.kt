@@ -56,7 +56,9 @@ class AddTodoViewModel : ViewModel() {
     }
 
     private suspend fun saveTodo(title: String, date: String, notes: String) {
-        var todo = Todo(title, date);
+        var todo = Todo();
+        todo.title = title
+        todo.reminderDate = date
         todo.notes = notes
         ServiceLocator.todoRepository.Save(todo)
 
