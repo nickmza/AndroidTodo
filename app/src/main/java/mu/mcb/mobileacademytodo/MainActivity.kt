@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), IModalDialog {
         if(!ServiceLocator.initilised){
             ServiceLocator.notificationService = NotificationService(applicationContext);
             ServiceLocator.todoRepository = TodoRepository(ServiceLocator.notificationService);
+            ServiceLocator.userInfo = UserInfo()
             ServiceLocator.initilised = true;
         }
     }

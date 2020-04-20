@@ -58,6 +58,8 @@ class TodoRepository(var notificationService: INotificationService) : ITodoRepos
     private fun getCollection() : CollectionReference {
         val db = FirebaseFirestore.getInstance()
         return db.collection(collectionName)
+            .document(ServiceLocator.userInfo.getUserId())
+            .collection("Todos")
     }
 
     override var onRefresh: () -> Unit = {}
