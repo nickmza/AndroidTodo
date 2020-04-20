@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity(), IModalDialog {
             findNavController(R.id.nav_host_fragment).navigate(action)
             fab.hide()
         }
+
+        fab.hide(); //Hide the fab.
     }
 
     private fun configureServiceLocator() {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/todoListFragment">
+    app:startDestination="@id/logonFragment">
 
     <fragment
         android:id="@+id/todoListFragment"
@@ -21,4 +21,12 @@
         android:id="@+id/todoDetailsFragment"
         android:name="mu.mcb.mobileacademytodo.fragments.TodoDetailsFragment"
         android:label="TodoDetailsFragment" />
+    <fragment
+        android:id="@+id/logonFragment"
+        android:name="mu.mcb.mobileacademytodo.fragments.LogonFragment"
+        android:label="LogonFragment" >
+        <action
+            android:id="@+id/action_logonFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment" />
+    </fragment>
 </navigation>
