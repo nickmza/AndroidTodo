@@ -11,6 +11,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import java.lang.Exception
 import java.nio.charset.Charset
 import java.security.KeyStore
 import java.util.*
@@ -21,9 +22,9 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 
-class BiometricHelper {
+open class BiometricHelper {
 
-    private val KEY_NAME: String = "TODO_APP_SECRET_KEY"
+    private val KEY_NAME: String = "MOBILE_ACADEMY_SECRET_KEY"
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
@@ -100,9 +101,8 @@ class BiometricHelper {
 
     var payload: ByteArray = ByteArray(0);
     var iv: ByteArray = ByteArray(0);
-    lateinit var currentSecretKey: SecretKey;
 
-    fun encryptPayload( result: BiometricPrompt.AuthenticationResult){
+    open fun encryptPayload( result: BiometricPrompt.AuthenticationResult){
 
 
         if(payload.count() ==0){
@@ -116,49 +116,21 @@ class BiometricHelper {
             var s = String(result, Charset.forName("UTF-8"))
         }
 
-
     }
 
-
-
-    fun decryptCredentials(){
-
-        /*
-        generateSecretKey(KeyGenParameterSpec.Builder(
-            KEY_NAME,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-            .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-            .setUserAuthenticationRequired(true)
-            .setInvalidatedByBiometricEnrollment(true)
-            .build())*/
-
-
+    fun promptForDecrypt(){
         val cipher = getCipher()
-
-        cipher.init(Cipher.DECRYPT_MODE, currentSecretKey, IvParameterSpec( iv))
-
+        var secret = getSecretKey()
+        cipher.init(Cipher.DECRYPT_MODE, secret, IvParameterSpec(iv))
         biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
-
     }
 
-    fun encryptCredentials(user: String, password:String){
-
-        generateSecretKey(KeyGenParameterSpec.Builder(
-            KEY_NAME,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-            .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-            .setUserAuthenticationRequired(true)
-            .setInvalidatedByBiometricEnrollment(true)
-            .build())
-
+    fun promptForEncrypt(){
         val cipher = getCipher()
-        currentSecretKey = getSecretKey()
-        cipher.init(Cipher.ENCRYPT_MODE, currentSecretKey)
+        var secret = getSecretKey()
+        cipher.init(Cipher.ENCRYPT_MODE, secret)
         iv = cipher.iv;
         biometricPrompt.authenticate(promptInfo, BiometricPrompt.CryptoObject(cipher))
-
     }
 
     private fun generateSecretKey(keyGenParameterSpec: KeyGenParameterSpec) {
@@ -178,5 +150,25 @@ class BiometricHelper {
         return Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
                 + KeyProperties.BLOCK_MODE_CBC + "/"
                 + KeyProperties.ENCRYPTION_PADDING_PKCS7)
+    }
+
+    fun initialise() {
+        val keyStore = KeyStore.getInstance("AndroidKeyStore")
+        keyStore.load(null)
+        var key =  keyStore.getKey(KEY_NAME, null)
+
+        if(key == null) {
+           generateSecretKey(
+                KeyGenParameterSpec.Builder(
+                    KEY_NAME,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
+                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                    .setUserAuthenticationRequired(true)
+                    .setInvalidatedByBiometricEnrollment(true)
+                    .build()
+            )
+        }
     }
 }

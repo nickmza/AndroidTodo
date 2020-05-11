@@ -20,10 +20,6 @@ class MainActivity : AppCompatActivity(), IModalDialog {
 
     lateinit var current : Fragment
 
-
-    var bio: BiometricHelper = BiometricHelper()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,14 +35,6 @@ class MainActivity : AppCompatActivity(), IModalDialog {
         }
 
         fab.hide(); //Hide the fab.
-
-        bio.checkBiometricSupport(this);
-        bio.configureBiometricPrompt(this, applicationContext, "Login with fingerprint", "Log in using your biometric credential")
-        //bio.showBiometricPrompt();
-
-
-        bio.encryptCredentials("","");
-
     }
 
     private fun configureServiceLocator() {
@@ -68,8 +56,6 @@ class MainActivity : AppCompatActivity(), IModalDialog {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
-        bio.decryptCredentials();
 
         return when (item.itemId) {
             R.id.action_settings -> true

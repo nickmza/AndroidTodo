@@ -1,20 +1,22 @@
 package mu.mcb.mobileacademytodo.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.logon.*
-import mu.mcb.mobileacademytodo.Interfaces.IModalDialog
+import mu.mcb.mobileacademytodo.BiometricHelper
 import mu.mcb.mobileacademytodo.R
 import mu.mcb.mobileacademytodo.ServiceLocator
+import java.nio.charset.Charset
+import java.util.Base64
 
 class LogonFragment : Fragment(){
 
@@ -58,6 +60,9 @@ class LogonFragment : Fragment(){
                 auth.signInWithEmailAndPassword(user, password)
                     .addOnCompleteListener{ logonResult ->
                         if(logonResult.isSuccessful){
+
+                            configureBiometricAuth(user, password);
+
                             val action = LogonFragmentDirections.actionLogonFragmentToTodoListFragment()
                             findNavController(it).navigate(action)
                         }else{
@@ -65,6 +70,35 @@ class LogonFragment : Fragment(){
                         }
                     }
             }
+        }
+    }
+
+    private fun configureBiometricAuth(user: String, password: String) {
+        var bio = object : BiometricHelper()
+        {
+            override fun encryptPayload(result: BiometricPrompt.AuthenticationResult) {
+                var passwordData = "{$user} {$password}".toByteArray(Charset.defaultCharset())
+                payload = result.cryptoObject?.cipher?.doFinal(passwordData)!!
+                saveBiometricInfo(payload, this.iv);
+            }
+        };
+        bio.configureBiometricPrompt(this.activity!!, context!!, "Biometric", "In future you can use your fingerprint to log on.")
+        if(bio.checkBiometricSupport(this.context!!).enabled){
+            bio.initialise()
+            bio.promptForEncrypt();
+        }
+    }
+
+    private fun saveBiometricInfo(payload: ByteArray, iv: ByteArray) {
+        writeSetting("password", Base64.getEncoder().encodeToString(payload))
+        writeSetting("iv", Base64.getEncoder().encodeToString(iv))
+  }
+
+    private fun writeSetting(key: String, value: String){
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString(key, value);
+            commit()
         }
     }
 }
