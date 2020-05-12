@@ -34,10 +34,8 @@ class LogonFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
         val uiHandler = Handler()
         uiHandler.post(Runnable {  useBiometricAuth()})
-
 
         loginButton.setOnClickListener {
 
@@ -92,7 +90,7 @@ class LogonFragment : Fragment(){
 
             var bio = object : BiometricHelper()
             {
-                override fun encryptPayload(result: BiometricPrompt.AuthenticationResult) {
+                override fun authenticationComplete(result: BiometricPrompt.AuthenticationResult) {
                     var passwordData = Base64.getDecoder().decode(password);
                     var decryptedData =  result.cryptoObject?.cipher?.doFinal(passwordData)!!
 
@@ -116,10 +114,10 @@ class LogonFragment : Fragment(){
     private fun configureBiometricAuth(user: String, password: String) {
         var bio = object : BiometricHelper()
         {
-            override fun encryptPayload(result: BiometricPrompt.AuthenticationResult) {
+            override fun authenticationComplete(result: BiometricPrompt.AuthenticationResult) {
                 var passwordData = "$user $password".toByteArray(Charset.defaultCharset())
-                payload = result.cryptoObject?.cipher?.doFinal(passwordData)!!
-                saveBiometricInfo(payload, this.iv);
+                var encryptedBytes = result.cryptoObject?.cipher?.doFinal(passwordData)!!
+                saveBiometricInfo(encryptedBytes, this.iv);
             }
         };
         bio.configureBiometricPrompt(this.activity!!, context!!, "Biometric", "In future you can use your fingerprint to log on.")

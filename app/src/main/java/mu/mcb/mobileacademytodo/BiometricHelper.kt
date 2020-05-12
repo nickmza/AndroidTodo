@@ -1,7 +1,5 @@
 package mu.mcb.mobileacademytodo
 
-import android.app.Activity
-import android.content.ClipDescription
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -11,15 +9,12 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import java.lang.Exception
 import java.nio.charset.Charset
 import java.security.KeyStore
-import java.util.*
 import java.util.concurrent.Executor
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 
 open class BiometricHelper {
@@ -29,6 +24,7 @@ open class BiometricHelper {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: androidx.biometric.BiometricPrompt.PromptInfo
+    var iv: ByteArray = ByteArray(0);
 
     fun showBiometricPrompt() {
         biometricPrompt.authenticate(promptInfo)
@@ -83,7 +79,7 @@ open class BiometricHelper {
                         "Authentication succeeded!", Toast.LENGTH_SHORT
                     )
                         .show()
-                    encryptPayload(result);
+                    authenticationComplete(result);
                 }
 
                 override fun onAuthenticationFailed() {
@@ -99,23 +95,8 @@ open class BiometricHelper {
 
     }
 
-    var payload: ByteArray = ByteArray(0);
-    var iv: ByteArray = ByteArray(0);
-
-    open fun encryptPayload( result: BiometricPrompt.AuthenticationResult){
-
-
-        if(payload.count() ==0){
-            var data = "SECRETSSS".toByteArray(Charset.defaultCharset())
-            payload = result.cryptoObject?.cipher?.doFinal(data)!!
-
-        }
-        else{
-
-            var result = result.cryptoObject?.cipher?.doFinal(payload)!!
-            var s = String(result, Charset.forName("UTF-8"))
-        }
-
+    open fun authenticationComplete(result: BiometricPrompt.AuthenticationResult){
+        Log.d("TODO", "Authentication is complete.")
     }
 
     fun promptForDecrypt(){
